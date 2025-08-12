@@ -275,3 +275,324 @@ This project is provided as-is for educational purposes. See LICENSE file for de
 ---
 
 **⚠️ Disclaimer**: This software is for educational and research purposes only. Trading foreign exchange carries a high level of risk and may not be suitable for all investors. Past performance is not indicative of future results. Always consult with a qualified financial advisor before making trading decisions.
+
+
+# 🚀 Production Forex Trading Stack Deployment Guide
+
+Complete setup for production-grade automated forex trading with real market data, live charts, and comprehensive dashboard.
+
+## 🏗️ **Production Architecture**
+
+### **Free Data Sources:**
+- ✅ **Yahoo Finance API** - Real-time forex prices
+- ✅ **ExchangeRate-API** - Live exchange rates  
+- ✅ **TradingView Charts** - Professional charting
+- ✅ **Investing.com Calendar** - Economic events
+- ✅ **Technical Indicators** - Real-time calculations
+
+### **Components:**
+1. **Enhanced Trading Service** - Real market data + technical analysis
+2. **Live Dashboard** - Real-time monitoring with charts
+3. **N8N Production Workflow** - Advanced signal processing
+4. **SQLite Database** - Performance tracking and logging
+
+---
+
+## 📋 **Step 1: Deploy Enhanced Trading Service**
+
+### **Create New Render Service:**
+1. **Go to Render Dashboard**
+2. **Create "Web Service" from Git**
+3. **Upload the enhanced `production_trading_stack.py`**
+4. **Name**: `forex-production-stack`
+
+### **Environment Variables:**
+```bash
+# Core Configuration
+PAPER_MODE=true
+MT5_REST_API_KEY=production_key_2025
+RISK_PCT_DEFAULT=2.0
+
+# Data Sources (all free)
+YAHOO_FINANCE_ENABLED=true
+EXCHANGERATE_API_ENABLED=true
+TECHNICAL_ANALYSIS_ENABLED=true
+
+# Performance
+MAX_DAILY_RISK_PCT=10.0
+MAX_OPEN_POSITIONS=5
+SIGNAL_GENERATION_INTERVAL=180
+
+# Dashboard
+DASHBOARD_ENABLED=true
+LIVE_CHARTS_ENABLED=true
+```
+
+### **Requirements:**
+Use `requirements_production.txt` with additional packages:
+- `yfinance` for Yahoo Finance data
+- `aiohttp` for async HTTP requests
+- `sqlite3` for database (built-in)
+
+---
+
+## 📊 **Step 2: Access Production Dashboard**
+
+### **Dashboard URL:**
+```
+https://forex-production-stack.onrender.com/dashboard
+```
+
+### **Features:**
+- 📈 **Live TradingView Charts** (EURUSD, GBPUSD, etc.)
+- 📊 **Real-time Market Data** (Yahoo Finance)
+- 🎯 **Signal Performance Metrics**
+- 📅 **Economic Calendar Integration**
+- 💹 **Strategy Performance Analytics**
+- 🔄 **Auto-refresh every 30 seconds**
+
+---
+
+## 🔧 **Step 3: Update N8N Production Workflow**
+
+### **Import Enhanced Workflow:**
+1. **Use `n8n_production_workflow.json`**
+2. **Enhanced features:**
+   - Real market data integration
+   - Technical analysis filtering
+   - Market context validation
+   - Advanced confidence scoring
+   - Live trade notifications
+
+### **New N8N Environment Variables:**
+```bash
+# Production Trading Service
+TRADING_SERVICE_URL=https://forex-production-stack.onrender.com
+MT5_REST_API_KEY=production_key_2025
+
+# Enhanced Features
+LIVE_DATA_ENABLED=true
+TECHNICAL_ANALYSIS_ENABLED=true
+MARKET_CONTEXT_FILTERING=true
+
+# Notifications (optional)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/your/webhook
+TELEGRAM_BOT_TOKEN=your_bot_token
+```
+
+### **Enhanced Workflow Features:**
+```bash
+✅ Real-time market data fetching
+✅ Technical indicator analysis
+✅ Market context filtering (RSI, trend, volatility)
+✅ Enhanced confidence scoring
+✅ Live trade notifications
+✅ Dashboard metrics updates
+```
+
+---
+
+## 📈 **Step 4: Live Market Data Integration**
+
+### **Yahoo Finance Integration:**
+- **Real-time prices** for all major forex pairs
+- **24-hour change** and volume data
+- **Free tier** - no API key required
+- **Rate limit**: ~2000 requests/hour
+
+### **Technical Analysis:**
+- **EMA 20/50/200** for trend analysis
+- **RSI 14** for momentum
+- **ATR 14** for volatility
+- **MACD** for trend confirmation
+- **Bollinger Bands** for volatility bands
+- **Support/Resistance** levels
+
+### **Enhanced Signal Processing:**
+```python
+# Market context filtering
+if technicalData.volatility > 3.0:
+    signal.confidence *= 0.8  # Reduce confidence in high volatility
+
+if signal.direction === 'BUY' && technicalData.rsi_14 > 70:
+    signal.confidence *= 0.7  # Reduce confidence when overbought
+```
+
+---
+
+## 🎯 **Step 5: Production Workflow Execution**
+
+### **Every 3 Minutes:**
+1. **Health Check** ✅
+2. **Get Live Market Data** (Yahoo Finance) ✅
+3. **Calculate Technical Indicators** ✅
+4. **Generate Enhanced Signals** ✅
+5. **Market Context Analysis** ✅
+6. **Execute High-Confidence Trades** (>80%) ✅
+7. **Update Dashboard Metrics** ✅
+8. **Send Trade Notifications** ✅
+
+### **Enhanced Signal Analysis:**
+```bash
+📊 Market Data: EURUSD @ 1.0521
+📈 Bid: 1.0520 | Ask: 1.0522
+📉 24h Change: +0.15%
+🌊 Volatility: 1.2%
+📊 RSI: 65.4 | Trend: UP
+
+🎯 Total signals: 20
+🔥 High confidence (>80%): 3 signals
+📈 Medium confidence (60-80%): 5 signals
+📉 Low confidence (<60%): 12 signals
+```
+
+---
+
+## 📊 **Step 6: Dashboard Features**
+
+### **Live Market Overview:**
+- **Real-time prices** for EURUSD, GBPUSD, USDJPY, AUDUSD
+- **24-hour change** percentages
+- **Bid/Ask spreads**
+- **Volume information**
+
+### **Performance Metrics:**
+- **Total signals today**
+- **Average confidence**
+- **Tradeable signals** (>60% confidence)
+- **Active paper trades**
+- **Strategy performance** comparison
+
+### **Integrated Charts:**
+- **TradingView widget** with live EURUSD chart
+- **5-minute timeframe** for scalping
+- **Technical indicators** overlay
+- **Dark theme** for professional look
+
+### **Economic Calendar:**
+- **Investing.com integration**
+- **Live economic events**
+- **Impact levels** (High/Medium/Low)
+- **Real-time updates**
+
+---
+
+## 🔄 **Step 7: Monitoring & Alerts**
+
+### **Slack Integration:**
+```bash
+🚀 Live Trade Executed
+
+Strategy: soros_macro_breakout
+Pair: EURUSD BUY
+Confidence: 87.3%
+Entry: 1.0521
+Market Trend: UP
+RSI: 65.4
+Status: SUCCESS ✅
+
+*Paper Mode - Live data, simulated execution*
+```
+
+### **Performance Tracking:**
+- **SQLite database** for persistent storage
+- **Signal history** and performance metrics
+- **Strategy comparison** analytics
+- **Win/loss ratios** tracking
+
+---
+
+## 🎯 **Step 8: Testing Production Environment**
+
+### **Validation Checklist:**
+- [ ] **Dashboard loads** at `/dashboard`
+- [ ] **Live market data** updating
+- [ ] **Technical indicators** calculating
+- [ ] **Signals generating** every 3 minutes
+- [ ] **Enhanced filtering** working
+- [ ] **Trade execution** in paper mode
+- [ ] **Notifications** sending (if configured)
+
+### **Expected Results:**
+```bash
+✅ 20 signals generated every 3 minutes
+✅ Real Yahoo Finance market data
+✅ Technical analysis filtering
+✅ 3-5 high-confidence signals per hour
+✅ 2-3 paper trades executed per hour
+✅ Live dashboard updates
+✅ Professional-grade monitoring
+```
+
+---
+
+## 🚀 **Step 9: Going Live (When Ready)**
+
+### **Live Trading Preparation:**
+1. **Test in production paper mode** for 2-4 weeks
+2. **Analyze performance metrics** and strategy effectiveness
+3. **Set up Windows VPS** with real MetaTrader 5
+4. **Deploy production code** to VPS
+5. **Set `PAPER_MODE=false`**
+6. **Start with minimum position sizes**
+
+### **Production Monitoring:**
+- **24/7 dashboard monitoring**
+- **Real-time trade alerts**
+- **Performance analytics**
+- **Risk management alerts**
+- **System health monitoring**
+
+---
+
+## 💰 **Cost Breakdown (All FREE!)**
+
+### **Render Free Tier:**
+- ✅ **Trading Service**: Free 750 hours/month
+- ✅ **N8N Service**: Free 750 hours/month
+- ✅ **PostgreSQL**: Free 1GB database
+
+### **Data Sources:**
+- ✅ **Yahoo Finance**: Free (rate limited)
+- ✅ **ExchangeRate API**: Free tier
+- ✅ **TradingView Charts**: Free embedding
+- ✅ **Investing.com Calendar**: Free integration
+
+### **Total Monthly Cost: $0** 💸
+
+---
+
+## 🎯 **Production vs Development Comparison**
+
+| Feature | Development | Production |
+|---------|-------------|------------|
+| Market Data | Simulated | Real-time Yahoo Finance |
+| Technical Analysis | Basic | Full indicator suite |
+| Dashboard | Basic metrics | Live charts + calendar |
+| Signal Quality | Random | Market-driven |
+| Filtering | Confidence only | Multi-factor analysis |
+| Monitoring | Simple logs | Professional dashboard |
+| Notifications | None | Slack/Telegram alerts |
+| Database | In-memory | Persistent SQLite |
+| Performance | Basic | Comprehensive analytics |
+
+---
+
+## 🚨 **Important Notes**
+
+### **Rate Limits:**
+- **Yahoo Finance**: ~2000 requests/hour (adjust N8N frequency if needed)
+- **ExchangeRate API**: 1000 requests/month free
+- **TradingView**: No limits for embedded charts
+
+### **Data Quality:**
+- **Yahoo Finance**: Excellent for major pairs
+- **Technical indicators**: Calculated from real OHLC data
+- **Economic calendar**: Manual integration (Investing.com iframe)
+
+### **Scalability:**
+- **Current setup**: Handles 5-10 pairs efficiently
+- **Render free tier**: Sufficient for development and testing
+- **Production scaling**: Consider paid tiers for heavy usage
+
+**Your production environment is now ready for professional forex trading automation with real market data!** 🚀
