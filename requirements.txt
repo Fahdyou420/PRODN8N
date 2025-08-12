@@ -8,4 +8,3 @@ numpy==1.25.2
 python-dotenv==1.0.0
 yfinance==0.2.28
 httpx==0.25.2
-sqlite3
