@@ -2310,7 +2310,7 @@ if __name__ == "__main__":
             "expected_duration_hours": 8
         }
     
-    async def _generate_simons_signal(self, symbol: str, market_data: MarketData, indicators: TechnicalIndicators) -> Dict:
+   async def _generate_simons_signal(self, symbol: str, market_data: MarketData, indicators: TechnicalIndicators) -> Dict:
         """Renaissance Statistical Arbitrage Strategy"""
         
         # Mean reversion based on Bollinger Bands and RSI
@@ -2341,7 +2341,7 @@ if __name__ == "__main__":
         elif direction == "BUY" and indicators.williams_r < -80:
             signal_strength += 0.2
         
-       if signal_strength < 0.6:  # ← Proper indentation (8 spaces)
+        if signal_strength < 0.6:  # ← Fixed indentation
             # No strong mean reversion signal
             return {
                 "signal_id": str(uuid.uuid4()),
