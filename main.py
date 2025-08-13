@@ -1972,41 +1972,53 @@ async def dashboard():
             let isRefreshing = false;
             
             async function refreshData() {
-                if (isRefreshing) return;
-                isRefreshing = true;
-                
-                const refreshIcon = document.getElementById('refresh-icon');
-                refreshIcon.innerHTML = '<div class="loading"></div>';
-                
-                try {
-                    console.log('🔄 Refreshing production dashboard data...');
-                    
-                    // Get performance data
-                    const response = await fetch('/performance');
-                    const data = await response.json();
-                    
-                    console.log('📊 Dashboard data received:', data);
-                    
-                    // Update performance metrics
-                    updatePerformanceMetrics(data.performance_metrics || {});
-                    
-                    // Update market overview
-                    updateMarketOverview(data.market_overview || {});
-                    
-                    // Update strategy chart
-                    updateStrategyChart(data.performance_metrics?.strategies || []);
-                    
-                    // Load recent signals
-                    loadRecentSignals();
-                    
-                    console.log('✅ Dashboard updated successfully');
-                } catch (error) {
-                    console.error('❌ Error refreshing dashboard:', error);
-                } finally {
-                    refreshIcon.innerHTML = '🔄';
-                    isRefreshing = false;
-                }
+    if (isRefreshing) return;
+    isRefreshing = true;
+    
+    const refreshIcon = document.getElementById('refresh-icon');
+    refreshIcon.innerHTML = '<div class="loading"></div>';
+    
+    try {
+        console.log('🔄 Refreshing production dashboard data...');
+        
+        // Get performance data WITH API KEY
+        const response = await fetch('/performance', {
+            headers: {
+                'X-API-KEY': 'forex_prod_2025_secure_key'
             }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        console.log('📊 Dashboard data received:', data);
+        
+        // Update performance metrics
+        updatePerformanceMetrics(data.performance_metrics || {});
+        
+        // Update market overview
+        updateMarketOverview(data.market_overview || {});
+        
+        // Update strategy chart
+        updateStrategyChart(data.performance_metrics?.strategies || []);
+        
+        // Load recent signals
+        loadRecentSignals();
+        
+        console.log('✅ Dashboard updated successfully');
+    } catch (error) {
+        console.error('❌ Error refreshing dashboard:', error);
+        // Show error in UI
+        document.getElementById('market-overview').innerHTML = 
+            '<p style="color: #ef4444;">❌ Error loading market data. Check console for details.</p>';
+    } finally {
+        refreshIcon.innerHTML = '🔄';
+        isRefreshing = false;
+    }
+}
             
             function updatePerformanceMetrics(metrics) {
                 const today = metrics.today || {};
