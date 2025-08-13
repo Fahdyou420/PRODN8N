@@ -2236,8 +2236,8 @@ async def dashboard():
             setInterval(() => {
                 if (!isRefreshing) {
                     refreshData();
-                }
-            }, 30000);
+                        }
+                    }, 300000);  // ← 5 minutes instead of 30 seconds
             
             // Initial load
             document.addEventListener('DOMContentLoaded', () => {
