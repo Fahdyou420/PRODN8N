@@ -2272,12 +2272,7 @@ if __name__ == "__main__":
         port=port,
         log_level="info",
         access_log=True
-   "timestamp": datetime.now(timezone.utc).isoformat(),
-            "reason": "No clear trend signal - awaiting EMA alignment",
-            "risk_reward_ratio": 0,
-            "expected_duration_hours": 0
-        }
-        
+    )
         # RSI filter
         if 40 <= indicators.rsi_14 <= 60:
             confidence_base *= 0.7  # Neutral RSI reduces confidence
@@ -2346,7 +2341,7 @@ if __name__ == "__main__":
         elif direction == "BUY" and indicators.williams_r < -80:
             signal_strength += 0.2
         
-       if signal_strength < 0.6:
+       if signal_strength < 0.6:  # ← Proper indentation (8 spaces)
             # No strong mean reversion signal
             return {
                 "signal_id": str(uuid.uuid4()),
