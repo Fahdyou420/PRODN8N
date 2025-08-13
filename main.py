@@ -2272,11 +2272,11 @@ if __name__ == "__main__":
         port=port,
         log_level="info",
         access_log=True
-    )utc).isoformat(),
-                "reason": "No clear trend signal - awaiting EMA alignment",
-                "risk_reward_ratio": 0,
-                "expected_duration_hours": 0
-            }
+   "timestamp": datetime.now(timezone.utc).isoformat(),
+            "reason": "No clear trend signal - awaiting EMA alignment",
+            "risk_reward_ratio": 0,
+            "expected_duration_hours": 0
+        }
         
         # RSI filter
         if 40 <= indicators.rsi_14 <= 60:
@@ -2346,7 +2346,7 @@ if __name__ == "__main__":
         elif direction == "BUY" and indicators.williams_r < -80:
             signal_strength += 0.2
         
-        if signal_strength < 0.6:
+       if signal_strength < 0.6:
             # No strong mean reversion signal
             return {
                 "signal_id": str(uuid.uuid4()),
@@ -2360,16 +2360,43 @@ if __name__ == "__main__":
                 "tp_pips": 0,
                 "suggested_volume_lots": 0,
                 "confidence": 0,
-                "performance_metrics": metrics,
-            "market_overview": market_overview,
-            "system_status": {
-                "paper_mode": PAPER_MODE,
-                "data_source": "yahoo_finance",
-                "technical_analysis": "enabled",
-                "backtesting": "enabled"
-                },
-
-"timestamp": datetime.now(timezone.utc).isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "reason": f"No statistical arbitrage opportunity - BB position {bb_position:.2f}, RSI {indicators.rsi_14:.1f}",
+                "risk_reward_ratio": 0,
+                "expected_duration_hours": 0
+            }
+        
+        # Calculate tight stops for stat arb
+        entry_price = market_data.ask if direction == "BUY" else market_data.bid
+        pip_size = 0.0001 if not symbol.endswith("JPY") else 0.01
+        sl_pips = 15  # Tight stops for mean reversion
+        tp_pips = 25  # Quick profit target
+        
+        if direction == "BUY":
+            sl = entry_price - (sl_pips * pip_size)
+            tp = entry_price + (tp_pips * pip_size)
+        else:
+            sl = entry_price + (sl_pips * pip_size)
+            tp = entry_price - (tp_pips * pip_size)
+        
+        volume = max(0.01, min(2.0, 100 / sl_pips))  # Higher volume for stat arb
+        
+        return {
+            "signal_id": str(uuid.uuid4()),
+            "strategy": "simons_stat_arb",
+            "symbol": symbol,
+            "direction": direction,
+            "entry_price": round(entry_price, 5),
+            "sl": round(sl, 5),
+            "tp": round(tp, 5),
+            "sl_pips": round(sl_pips, 1),
+            "tp_pips": round(tp_pips, 1),
+            "suggested_volume_lots": round(volume, 2),
+            "confidence": round(signal_strength, 3),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "reason": f"Mean reversion: BB position {bb_position:.2f}, RSI {indicators.rsi_14:.1f}, Williams %R {indicators.williams_r:.1f}",
+            "risk_reward_ratio": round(tp_pips / sl_pips, 2),
+            "expected_duration_hours": 2
         }
         
     except Exception as e:
