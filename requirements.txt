@@ -31,7 +31,6 @@ PyJWT>=2.8.0
 cryptography>=41.0.0
 
 # SQLite Database Utilities
-sqlite3  # Built-in Python module
 
 # Additional utilities
 typing-extensions>=4.8.0
