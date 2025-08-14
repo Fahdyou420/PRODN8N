@@ -1355,18 +1355,25 @@ async def generate_signal(
     background_tasks: BackgroundTasks,
     _: bool = Depends(verify_api_key)
 ):
-    """Generate trading signal"""
+    """Generate trading signal (requires API key)"""
     try:
         signal = await signal_generator.generate_enhanced_signal(request.strategy, request.symbol)
-        
         background_tasks.add_task(database.save_signal, signal)
-        
         logger.info(f"Signal generated: {signal['strategy']} {signal['symbol']} {signal['direction']} (confidence: {signal['confidence']:.2%})")
-        
         return {"signal": signal}
-        
     except Exception as e:
         logger.error(f"Signal generation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/generate-public")
+async def generate_signal_public(request: SignalRequest):
+    """Generate trading signal (public access for dashboard)"""
+    try:
+        signal = await signal_generator.generate_enhanced_signal(request.strategy, request.symbol)
+        logger.info(f"Public signal generated: {signal['strategy']} {signal['symbol']} {signal['direction']}")
+        return {"signal": signal}
+    except Exception as e:
+        logger.error(f"Public signal generation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/batch_generate")
