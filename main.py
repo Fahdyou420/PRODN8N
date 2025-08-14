@@ -1458,8 +1458,8 @@ async def execute_order(
         )
 
 @app.get("/performance")
-async def get_performance_data(_: bool = Depends(verify_api_key)):
-    """Get performance analytics"""
+async def get_performance_data():
+    """Get performance analytics - public endpoint for dashboard"""
     try:
         metrics = database.get_performance_metrics()
         
@@ -1852,12 +1852,8 @@ async def dashboard():
                     const healthData = await healthResponse.json();
                     updateSystemStatus(healthData);
                     
-                    // Get performance data WITH API KEY
-                    const response = await fetch('/performance', {
-                        headers: {
-                            'X-API-KEY': 'forex_prod_2025_secure_key'
-                        }
-                    });
+                    // Get performance data WITHOUT API KEY
+                    const response = await fetch('/performance');
                     
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
