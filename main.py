@@ -1365,12 +1365,30 @@ async def generate_signal(
         logger.error(f"Signal generation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/test-dashboard", response_class=HTMLResponse)
+async def test_dashboard():
+    """Test dashboard"""
+    return HTMLResponse(content="<h1>Dashboard Test - This Works!</h1><p>EURUSD: 1.17080</p>")
+
+@app.get("/generate-public")
+async def generate_signal_public_get(
+    strategy: str = "soros_macro_breakout", 
+    symbol: str = "EURUSD"
+):
+    """Generate trading signal (public GET access)"""
+    try:
+        request = SignalRequest(strategy=strategy, symbol=symbol)
+        signal = await signal_generator.generate_enhanced_signal(request.strategy, request.symbol)
+        return {"signal": signal}
+    except Exception as e:
+        logger.error(f"Public signal generation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/generate-public")
 async def generate_signal_public(request: SignalRequest):
-    """Generate trading signal (public access for dashboard)"""
+    """Generate trading signal (public POST access)"""
     try:
         signal = await signal_generator.generate_enhanced_signal(request.strategy, request.symbol)
-        logger.info(f"Public signal generated: {signal['strategy']} {signal['symbol']} {signal['direction']}")
         return {"signal": signal}
     except Exception as e:
         logger.error(f"Public signal generation error: {e}")
